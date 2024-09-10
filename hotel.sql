@@ -91,3 +91,22 @@ join room r on r.hotel_id = h.id
 join booking b on b.room_id =r.id 
 join client c on c.id = b.client_id
 group by s."name" ;
+
+-- 1. Vue 1 : Afficher la liste des réservations avec le nom des clients
+select b.booking_date, c.last_name from booking b 
+join client c on c.id = b.client_id;
+
+-- 4. Accordez les privilèges « SELECT », « INSERT », « UPDATE » et « DELETE » à
+-- l’utilisateur « application_admin » sur toutes les tables sauf « station ».
+grant select | insert |UPDATE | DELETE 
+ON booking |client | room | hotel
+to application_admin;
+
+-- 7. Ajoutez les privilèges de lecture des données uniquement sur votre vue permettant de
+-- retrouver chambres avec le nom de l’hôtel et le nom de la station (vue 2).
+CREATE ROLE application_client
+LOGIN
+PASSWORD 'application_client';
+
+grant select on hotel_room_station
+to application_client;

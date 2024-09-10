@@ -152,6 +152,102 @@ INSERT INTO booking (room_id, client_id, booking_date, stay_start_date, stay_end
 INSERT INTO booking (room_id, client_id, booking_date, stay_start_date, stay_end_date, price, deposit) VALUES (4, 6, '2022-01-10', '2022-07-01', '2022-07-15', 500, 80);
 INSERT INTO booking (room_id, client_id, booking_date, stay_start_date, stay_end_date, price, deposit) VALUES (4, 1, '2022-01-10', '2022-07-01', '2022-07-15', 40, 0);
 
+CREATE OR REPLACE VIEW hotel_station
+AS
+SELECT h.id AS hotel_id,
+h.station_id,
+h.name as "Hotel name",
+h.category,
+h.address,
+h.city,
+s.name AS "Station name",
+s.altitude
+FROM hotel h
+JOIN station s ON h.station_id = s.id;
+
+-- création vue 1
+create OR REPLACE VIEW reservation_client
+AS
+SELECT 
+c.first_name,
+c.last_name,
+b.booking_date
+FROM hotel h
+JOIN room r ON r.hotel_id = h.id
+JOIN booking b ON b.room_id = r.id
+JOIN client c ON c.id = b.client_id;
+
+-- création vue 2
+CREATE OR REPLACE VIEW reservation_client
+AS
+SELECT h.id AS hotel_id,
+h.station_id,
+h.name as "Hotel name",
+h.category,
+h.address as hotel_adresse,
+h.city,
+b.id,
+b.room_id,
+b.client_id,
+b.booking_date,
+b.stay_start_date,
+b.stay_end_date,
+b.price,
+b.deposit,
+c.first_name,
+c.last_name,
+c.address as client_adresse,
+c.city as city_adresse
+FROM hotel h
+JOIN room r ON r.hotel_id = h.id
+JOIN booking b ON b.room_id = r.id
+JOIN client c ON c.id = b.client_id;
+
+-- ou
+CREATE OR REPLACE VIEW reservation_client
+AS
+SELECT 
+c.first_name,
+c.last_name,
+h.name as "Hotel name",
+b.booking_date
+FROM hotel h
+JOIN room r ON r.hotel_id = h.id
+JOIN booking b ON b.room_id = r.id
+JOIN client c ON c.id = b.client_id;
+
+-- création vue 3
+CREATE OR REPLACE VIEW hotel_room_station
+AS
+SELECT h.id AS hotel_id,
+h.station_id,
+h.name as "Hotel name",
+h.category,
+h.address as hotel_adresse,
+h.city,
+r.id as room_id,
+r.hotel_id as hotel_room,
+r.number,
+r.capacity,
+r.type,
+s.id,
+s.name,
+s.altitude
+FROM hotel h
+JOIN room r ON r.hotel_id = h.id
+JOIN station s ON s.id = h.station_id;
+-- ou
+
+CREATE OR REPLACE VIEW hotel_room_station
+AS
+SELECT 
+r.id as room_id,
+h.name as "Hotel name",
+s.name
+FROM hotel h
+JOIN room r ON r.hotel_id = h.id
+JOIN station s ON s.id = h.station_id;
+drop view hotel_room_station;
 
 
 
